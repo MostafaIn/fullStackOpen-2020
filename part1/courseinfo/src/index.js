@@ -23,18 +23,20 @@ const Content = ({parts}) =>{
   )
 };
 
-// const Total = (props) =>{
-//   const exercises = props.parts.map( part => part.exercises);
-//   const total = exercises.reduce( (a, b) => a + b, 0);
-//   console.log(total)
-//   return <p>Number of exercises {total}</p>
-// };
+const Total = ({exercises}) =>{
+  const total = exercises.reduce( (a, b) => a + b, 0);
+  console.log(total)
+  return <h4>Number of exercises {total}</h4>
+};
 
 const Course = ({course}) =>{
+  const exercises = course.parts.map( part => part.exercises);
+
   return(
     <div>
       <Header courseName={course.name} />
       <Content parts={course.parts} />
+      <Total exercises={exercises} />
     </div>
   )
 };
