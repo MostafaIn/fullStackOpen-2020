@@ -13,7 +13,12 @@ const App = () => {
   const handleSubmit = (event) =>{
         event.preventDefault();
         const newPerson = { name: newName}
-        setPersons([...persons, newPerson])
+        if(!newName || newName === ''){
+            return alert('Enter your name')
+          } 
+        const checkName = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
+        
+        (checkName) ? alert(`${newName} is already added to phonebook`) : setPersons([...persons, newPerson]);  
         setNewName('')
   };
 
