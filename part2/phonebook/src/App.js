@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -10,6 +14,23 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchName, setsearchName ] = useState('')
+
+  const handleChange = (e) =>{
+    const {name, value} = e.target;
+    switch (name) {
+      case 'newName':
+          setNewName(value)
+        break;
+      case 'newNumber':
+          setNewNumber(value)
+        break;
+      case 'searchName':
+          setsearchName(value)
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleSubmit = (event) =>{
         event.preventDefault();
@@ -30,30 +51,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input value={searchName} onChange={(e) => setsearchName(e.target.value)} />
-      </div>
+        <Filter 
+          searchName={searchName} 
+          handleChange={handleChange} 
+        />
       <h2>add a new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={(e) => setNewName(e.target.value)} />
-        </div>
-        <div>
-        number: <input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+        <PersonForm 
+          handleSubmit={handleSubmit} 
+          newName={newName}
+          newNumber={newNumber} 
+          handleChange={handleChange}
+        />
       <h2>Numbers</h2>
-      <table>
-        <tbody>
-          {searchedPersons.map( (person,index) => <tr  key={index}>
-              <td>{person.name}</td>
-              <td>{person.number}</td>
-          </tr>)}
-        </tbody>
-      </table>
+      <Persons searchedPersons={searchedPersons} />
       {(searchedPersons.length < 1) ? <h4>not matched</h4> : null}
     </div>
   )
