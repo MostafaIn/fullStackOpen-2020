@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import axios from 'axios'
+import personsServices from './services/persons';
 
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
@@ -13,10 +13,9 @@ const App = () => {
   const [ searchName, setsearchName ] = useState('')
 
   useEffect(() => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then( response => setPersons(response.data))
-  }, [])
+    personsServices.getAll()
+    .then( response => setPersons(response))
+  }, [persons])
 
   const handleChange = (e) =>{
     const {name, value} = e.target;
@@ -38,14 +37,16 @@ const App = () => {
   const handleSubmit = (event) =>{
         event.preventDefault();
         const newPerson = { name: newName, number: newNumber}
+
         if(!newName || newName === ''){
             return alert('Enter your name')
           } 
         const checkName = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
         
-        (checkName) ? alert(`${newName} is already added to phonebook`) : setPersons([...persons, newPerson]);  
+        (checkName) ? alert(`${newName} is already added to phonebook`) : personsServices.create(newPerson);  
         setNewName('')
         setNewNumber('')
+        
   };
 
   const searchedPersons = persons.filter(person => person.name.toLowerCase().includes(searchName.toLowerCase()));
