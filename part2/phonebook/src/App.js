@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     personsServices.getAll()
     .then( response => setPersons(response))
-  }, [persons])
+  }, [])
 
   const handleChange = (e) =>{
     const {name, value} = e.target;
@@ -35,7 +35,7 @@ const App = () => {
   };
 
   const handleSubmit = (event) =>{
-        event.preventDefault();
+        // event.preventDefault();
         const newPerson = { name: newName, number: newNumber}
 
         if(!newName || newName === ''){
@@ -48,6 +48,13 @@ const App = () => {
         setNewNumber('')
         
   };
+
+  const handleDelete = (name, id) =>{
+    if (!window.confirm(`Delete ${name} ?`)) {
+      return;
+    }
+    personsServices.deletePerson(id)
+  }
 
   const searchedPersons = persons.filter(person => person.name.toLowerCase().includes(searchName.toLowerCase()));
   
@@ -67,7 +74,10 @@ const App = () => {
           handleChange={handleChange}
         />
       <h2>Numbers</h2>
-      <Persons searchedPersons={searchedPersons} />
+      <Persons 
+        searchedPersons={searchedPersons} 
+        handleDelete={handleDelete}
+      />
       {(searchedPersons.length < 1) ? <h4>not matched</h4> : null}
     </div>
   )
