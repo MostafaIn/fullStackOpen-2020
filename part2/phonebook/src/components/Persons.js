@@ -1,17 +1,8 @@
 import React from 'react'
-// import personsServices from '../services/persons';
 
 
 
 const Persons = ({searchedPersons, handleDelete}) => {
-
-    // const handleDelete = (name, id) =>{
-    //   if (!window.confirm(`Delete ${name} ?`)) {
-    //     return;
-    //   }
-    //   personsServices.deletePerson(id)
-    // }
-
     return (
         <table>
         <tbody>

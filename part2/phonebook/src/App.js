@@ -35,15 +35,21 @@ const App = () => {
   };
 
   const handleSubmit = (event) =>{
-        // event.preventDefault();
+        event.preventDefault();
         const newPerson = { name: newName, number: newNumber}
 
         if(!newName || newName === ''){
             return alert('Enter your name')
           } 
         const checkName = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
-        
-        (checkName) ? alert(`${newName} is already added to phonebook`) : personsServices.create(newPerson);  
+        if(checkName){
+          if(window.confirm(`${newName} is already added to phonebook,replace the old number with a new one?`)){
+            checkName.number = newNumber 
+            personsServices.update(checkName.id, checkName)
+          }
+        }else{
+          personsServices.create(newPerson)
+        } 
         setNewName('')
         setNewNumber('')
         
