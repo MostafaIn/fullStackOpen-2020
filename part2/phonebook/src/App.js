@@ -50,9 +50,9 @@ const App = () => {
         }else{
           personsServices.create(newPerson)
         } 
-        setNewName('')
-        setNewNumber('')
         
+        setNewName('')
+        setNewNumber('')    
   };
 
   const handleDelete = (name, id) =>{
