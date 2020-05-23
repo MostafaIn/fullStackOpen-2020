@@ -3,13 +3,14 @@ import React from 'react'
 
 const Notifcation = ({message}) => {
     console.log(message)
-    if (!message) {
+    const {msg, err} = message
+    if (!msg) {
         return null
       }
     
       return (
-        <div className="notification">
-          {message}
+        <div className={ err ? "notification error" : "notification"}>
+          {msg}
         </div>
       )
 }

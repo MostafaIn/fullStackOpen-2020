@@ -12,12 +12,16 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchName, setsearchName ] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState({msg: null, err: false})
 
   useEffect(() => {
     personsServices.getAll()
     .then( response => setPersons(response))
-  }, [persons])
+    .catch(err =>{
+      setMessage({msg:`Data is not loaded from server!`, err: true})
+      setTimeout(() => setMessage({msg: null, err: false}),5000)
+    })
+  }, [])
 
   const handleChange = (e) =>{
     const {name, value} = e.target;
@@ -47,14 +51,19 @@ const App = () => {
         if(checkName){
           if(window.confirm(`${newName} is already added to phonebook,replace the old number with a new one?`)){
             checkName.number = newNumber 
-            personsServices.update(checkName.id, checkName)
-            setErrorMessage(`updated ${newPerson.name} !`)
-            setTimeout(() => setErrorMessage(''),5000)
+            personsServices.update(checkName.id, checkName).then((res) =>{
+              setMessage({msg:`updated ${res.name} !`, err: false})
+              setTimeout(() => setMessage({msg: null, err: false}),5000)
+            }).catch( err =>{
+              setMessage({msg:`Information of ${newName} has already been removed from server!`, err: true})
+              setTimeout(() => setMessage({msg: null, err: false}),5000)
+            })
           }
         }else{
-          personsServices.create(newPerson)
-          setErrorMessage(`Added ${newPerson.name} !`)
-          setTimeout(() => setErrorMessage(''),5000)
+          personsServices.create(newPerson).then((res) =>{
+            setMessage({msg:`Added ${res.name} !`, err: false})
+            setTimeout(() => setMessage({msg: null, err: false}),5000)
+          })
         } 
         
         setNewName('')
@@ -65,9 +74,10 @@ const App = () => {
     if (!window.confirm(`Delete ${name} ?`)) {
       return;
     }
-    personsServices.deletePerson(id)
-    setErrorMessage(`${name} deleted!`)
-    setTimeout(() => setErrorMessage(''),5000)
+    personsServices.deletePerson(id).then(() =>{
+      setMessage({msg:`${name} deleted!`, err: false})
+      setTimeout(() => setMessage({msg: null, err: false}),5000)
+    })
   }
 
   const searchedPersons = persons.filter(person => person.name.toLowerCase().includes(searchName.toLowerCase()));
@@ -77,7 +87,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
         <Notification
-          message={errorMessage}
+          message={message}
         />
         <Filter 
           searchName={searchName} 
