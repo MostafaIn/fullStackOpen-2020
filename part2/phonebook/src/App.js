@@ -5,17 +5,19 @@ import personsServices from './services/persons';
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notifcation'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchName, setsearchName ] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     personsServices.getAll()
     .then( response => setPersons(response))
-  }, [])
+  }, [persons])
 
   const handleChange = (e) =>{
     const {name, value} = e.target;
@@ -46,9 +48,13 @@ const App = () => {
           if(window.confirm(`${newName} is already added to phonebook,replace the old number with a new one?`)){
             checkName.number = newNumber 
             personsServices.update(checkName.id, checkName)
+            setErrorMessage(`updated ${newPerson.name} !`)
+            setTimeout(() => setErrorMessage(''),5000)
           }
         }else{
           personsServices.create(newPerson)
+          setErrorMessage(`Added ${newPerson.name} !`)
+          setTimeout(() => setErrorMessage(''),5000)
         } 
         
         setNewName('')
@@ -60,6 +66,8 @@ const App = () => {
       return;
     }
     personsServices.deletePerson(id)
+    setErrorMessage(`${name} deleted!`)
+    setTimeout(() => setErrorMessage(''),5000)
   }
 
   const searchedPersons = persons.filter(person => person.name.toLowerCase().includes(searchName.toLowerCase()));
@@ -68,6 +76,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <Notification
+          message={errorMessage}
+        />
         <Filter 
           searchName={searchName} 
           handleChange={handleChange} 
