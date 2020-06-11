@@ -55,13 +55,18 @@ const App = () => {
               setMessage({msg:`updated ${res.name} !`, err: false})
               setTimeout(() => setMessage({msg: null, err: false}),5000)
             }).catch( err =>{
-              setMessage({msg:`Information of ${newName} has already been removed from server!`, err: true})
+              setMessage({msg: Object.values(err.response.data), err: true})
               setTimeout(() => setMessage({msg: null, err: false}),5000)
             })
           }
         }else{
-          personsServices.create(newPerson).then((res) =>{
+          personsServices.create(newPerson)
+          .then((res) =>{
             setMessage({msg:`Added ${res.name} !`, err: false})
+            setTimeout(() => setMessage({msg: null, err: false}),5000)
+          })
+          .catch( error =>{
+            setMessage({msg:Object.values(error.response.data), err: true})
             setTimeout(() => setMessage({msg: null, err: false}),5000)
           })
         } 
